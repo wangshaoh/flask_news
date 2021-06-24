@@ -1,0 +1,60 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-06-22 17:34:58
+ * @LastEditTime: 2021-06-23 17:22:05
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /flask_news/templates/add.html
+-->
+
+{% extends "base.html" %}
+
+{% block body %}
+<h1>添加数据</h1>
+<div>
+    名称：<input class="title" type="text" value="新闻1">
+</div>
+<div>
+    内容：<textarea class="content" name="" id="" cols="30" rows="10">重大新闻1</textarea>
+</div>
+<div>
+    类型：<input class="types" type="text" value="时事">
+</div>
+
+<button class="addData">添加数据</button>
+
+
+{% endblock %}
+
+
+{% block script %}
+<script>
+    window.onload = function(){
+        $('.addData').on('click', function(){
+            console.log('请求数据')
+            var param = {
+                title:$('.title').val(),
+                content:$('.content').val(),
+                types:$('.types').val(),
+            }
+            $.ajax({
+                url:'/add_data',
+                type:'POST',
+                data:JSON.stringify(param),
+                dataType:'json',
+                success:function(res){
+                    console.log(res)
+                    if(res.status){
+                        alert('新建成功!')
+                    }
+                },
+                error:function(res){
+                    console.error(res)
+                }
+            })
+        })
+
+    
+    }
+</script>
+{% endblock %}

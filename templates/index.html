@@ -1,0 +1,98 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-06-21 16:50:17
+ * @LastEditTime: 2021-06-23 18:58:37
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /flask_news/templete/index.html
+-->
+{% extends "base.html" %}
+
+{% block head %}
+    <style>
+        .listBox li {
+            height: 30px;
+            line-height: 30px;
+            border-bottom: 1px solid darkorange;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <h2>首页</h2>
+    <ul class="listBox">
+        <li>暂无内容</li>
+    </ul>
+{% endblock %}
+
+{% block script %}
+    <script>
+        window.onload = function () {
+            // 渲染列表
+            function renderList(data) {
+                if (data && data.length) {
+                    let li = '';
+                    data.forEach(item => {
+                        li += '<a href="/detail/'+ item.id +'"><li class="newsLi" data-id=' + item.id + '>' + item.title + '</li></a>'
+                    })
+                    $('.listBox').html(li)
+                }
+            }
+
+            // 查列表
+            function queryList() {
+                return new Promise(resolve => {
+                    $.ajax({
+                        url: '/query',
+                        type: 'POST',
+                        data: {},
+                        timeout:3000,
+                        success: function (res) {
+                            console.log(res)
+                            if (res.status) {
+                                resolve(res.value)
+                            }
+                        },
+                        error: function (res) {
+                            console.log(res)
+                        }
+                    })
+
+                })
+            }
+
+            // 查详情
+            function queryDetail(id) {
+                return new Promise(resolve => {
+                    if (id !== undefined) {
+                        $.ajax({
+                            url: '/detail.do',
+                            type: 'POST',
+                            data: JSON.stringify({id:id}),
+                            timeout:3000,
+                            success: function (res) {
+                                console.log(res)
+                                if (res.status) {
+                                    resolve(res.value)
+                                }
+                            },
+                            error: function (res) {
+                                console.log(res)
+                            }
+                        })
+                    }
+                })
+            }
+
+            $('body').delegate('.newsLi', 'click', function () {
+                let id = $(this).attr('data-id')
+                {#queryDetail(id)#}
+            })
+
+            queryList().then(value => {
+                renderList(value)
+            })
+        }
+    </script>
+{% endblock %}
