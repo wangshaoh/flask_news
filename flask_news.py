@@ -94,13 +94,19 @@ def download():
 def query():
     if request.method == 'POST':
         news_list = News.query.filter_by(is_valid=1).all()
-        print('jieguo================')
         value = METHODS.toDict(news_list)
-        print(value)
+
+        # 分页查
+        # value = News.query.filter_by(is_valid=1).paginate(page=1, per_page=5)
+        # print(value.items)
 
         return {
             "status": True,
-            "value": value
+            "value": value,
+            "total": len(value),
+
+            # "value": METHODS.toDict(value.items),
+            # "total": value.total,
         }
     else:
         return {
