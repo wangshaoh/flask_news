@@ -14,7 +14,7 @@ import json
 import base.methods as METHODS
 import os
 import glob
-from werkzeug import security
+# from werkzeug import security
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@ying5319106@localhost:3306/flask_news?charset=utf8'
@@ -44,16 +44,15 @@ class News(db.Model):
 
     pass
 
+# ==============================页面路由====================================
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/cat/<name>')
 def cat(name):
     return render_template('cat.html', name=name)
-
 
 @app.route('/detail/<id>')
 def detail(id=''):
@@ -63,6 +62,16 @@ def detail(id=''):
     else:
         return render_template('404.html')
 
+# 文件下载页面
+@app.route('/download')
+def download():
+    fileList = []
+    for filename in glob.glob('upload_flask/*'):
+        fileList.append(filename[13:])
+    print(fileList)
+    return render_template('download.html', fileList=fileList)
+
+# ======================================================================================
 
 # 请求数据
 @app.route('/query', methods=["POST"])
@@ -160,7 +169,6 @@ def uploader():
             "status": False,
         }
 
-
 # 文件下载
 @app.route('/download.do/<filename>')
 def downloadDo(filename):
@@ -172,14 +180,6 @@ def downloadDo(filename):
             "status": False,
         }
 
-
-@app.route('/download')
-def download():
-    fileList = []
-    for filename in glob.glob('upload_flask/*'):
-        fileList.append(filename[13:])
-    print(fileList)
-    return render_template('download.html', fileList=fileList)
 
 
 if __name__ == '__main__':
