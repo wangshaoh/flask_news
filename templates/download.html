@@ -1,0 +1,30 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-06-22 17:34:58
+ * @LastEditTime: 2021-06-23 17:22:05
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /flask_news/templates/add.html
+-->
+
+{% extends "base.html" %}
+
+{% block body %}
+<h1>文件下载</h1>
+
+<div>
+{% for filename in fileList %}
+    <a href="/download.do/{{ filename }}"><div data-name="{{ filename }}" >{{ filename }}</div></a>
+{% endfor %}
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    window.onload = function(){
+
+
+    }
+</script>
+{% endblock %}

@@ -8,13 +8,18 @@ FilePath: /flask_news/flask_news.py
 '''
 
 import re
-from flask import Flask, render_template, request, url_for, redirect, jsonify
+from flask import Flask, render_template, request, url_for, redirect, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 import json
 import base.methods as METHODS
+import os
+import glob
+from werkzeug import security
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@ying5319106@localhost:3306/flask_news?charset=utf8'
+app.config['UPLOAD_FOLDER'] = 'upload_flask/'  # 上传文件路径
+
 db = SQLAlchemy(app)
 
 app.debug = True
@@ -136,6 +141,45 @@ def queryDetail():
         return {
             "status": False,
         }
+
+
+# 文件上传
+@app.route('/uploader', methods=["GET", "POST"])
+def uploader():
+    if (request.method == "POST"):
+        f = request.files['file']
+        print(request.files)
+        print(os.path)
+        pt = os.path.join(app.config['UPLOAD_FOLDER'], f.filename)
+        f.save(pt)
+        return {
+            "status": True,
+        }
+    else:
+        return {
+            "status": False,
+        }
+
+
+# 文件下载
+@app.route('/download.do/<filename>')
+def downloadDo(filename):
+    if (filename):
+        dirpath = os.path.join(app.root_path,'upload_flask')  # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
+        return send_from_directory(dirpath, filename, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
+    else:
+        return {
+            "status": False,
+        }
+
+
+@app.route('/download')
+def download():
+    fileList = []
+    for filename in glob.glob('upload_flask/*'):
+        fileList.append(filename[13:])
+    print(fileList)
+    return render_template('download.html', fileList=fileList)
 
 
 if __name__ == '__main__':
