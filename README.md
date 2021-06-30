@@ -7,7 +7,7 @@ _1、安装flask和flask_sqlalchemy：_
 
 `sudo pip3 install flask_sqlalchemy`
 
-_2、配置mysql数据库_
+_2、在flask_news.py配置自己的mysql数据库_
 
 `app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@ying5319106@localhost:3306/flask_news?charset=utf8'
 `
