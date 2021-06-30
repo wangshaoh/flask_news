@@ -12,7 +12,13 @@ _2、配置mysql数据库_
 `app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:@ying5319106@localhost:3306/flask_news?charset=utf8'
 `
 
+_并且初始化数据库表字段_
 
+`运行python3 环境`
+
+`>>> from flask_news import db`
+
+`>>> db.create_all()`
 
 _3、启动flask调试状态：_
 
