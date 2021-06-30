@@ -26,7 +26,9 @@ _3、启动flask调试状态：_
 
 _或者_
 
-`if __name__ == '__main__' // ⚠️必须放在文件最底部:
+`// ⚠️必须放在文件最底部:`
+
+`if __name__ == '__main__' 
     app.run(debug=True)`
     
 `$ python3 flask_news.py   ` 
