@@ -52,10 +52,11 @@
                     console.log(res)
                     if(res.status){
                         alert('新建成功!')
+                        window.location.href='http://127.0.0.1:5000/index'
                     }
                 },
                 error:function(res){
-                    console.error(res)
+                    console.log(res)
                 }
             })
         })

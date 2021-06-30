@@ -1,5 +1,5 @@
 '''
-Author: your name
+Author: wangshaoh
 Date: 2021-06-21 15:13:18
 LastEditTime: 2021-06-23 18:54:22
 LastEditors: Please set LastEditors
@@ -14,6 +14,7 @@ import json
 import base.methods as METHODS
 import os
 import glob
+
 # from werkzeug import security
 
 app = Flask(__name__)
@@ -44,15 +45,23 @@ class News(db.Model):
 
     pass
 
+
 # ==============================页面路由====================================
 
 @app.route('/')
+def entry():
+    return redirect(url_for('index'))
+
+
+@app.route('/index')
 def index():
     return render_template('index.html')
+
 
 @app.route('/cat/<name>')
 def cat(name):
     return render_template('cat.html', name=name)
+
 
 @app.route('/detail/<id>')
 def detail(id=''):
@@ -62,9 +71,11 @@ def detail(id=''):
     else:
         return render_template('404.html')
 
+
 @app.route('/add')
 def add():
     return render_template('add.html')
+
 
 # 文件下载页面
 @app.route('/download')
@@ -74,6 +85,7 @@ def download():
         fileList.append(filename[13:])
     print(fileList)
     return render_template('download.html', fileList=fileList)
+
 
 # ======================================================================================
 
@@ -96,9 +108,6 @@ def query():
             "value": None
         }
     pass
-
-
-
 
 
 # 添加数据
@@ -154,6 +163,38 @@ def queryDetail():
         }
 
 
+# 删除数据
+@app.route('/delete.do', methods=["POST"])
+def deleteData():
+    if request.method == "POST":
+        try:
+            # 处理请求入参
+            reqData = request.get_data()
+            reqDict = json.loads(reqData)
+            curData = News.query.get(reqDict.get('id'))
+            if curData:
+                curData.is_valid = False
+                db.session.add(curData)
+                db.session.commit()
+                return {
+                    "status": True
+                }
+            else:
+                return {
+                    "status": False,
+                    "msg":"未找到该数据"
+                }
+        except ValueError:
+            print(ValueError)
+            return {
+                "status": False,
+            }
+    else:
+        return {
+            "status": False,
+        }
+
+
 # 文件上传
 @app.route('/uploader', methods=["GET", "POST"])
 def uploader():
@@ -171,17 +212,18 @@ def uploader():
             "status": False,
         }
 
+
 # 文件下载
 @app.route('/download.do/<filename>')
 def downloadDo(filename):
     if (filename):
-        dirpath = os.path.join(app.root_path,'upload_flask')  # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
+        dirpath = os.path.join(app.root_path,
+                               'upload_flask')  # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
         return send_from_directory(dirpath, filename, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
     else:
         return {
             "status": False,
         }
-
 
 
 if __name__ == '__main__':

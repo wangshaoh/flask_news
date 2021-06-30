@@ -21,6 +21,7 @@
 
 {% block body %}
     <h2>首页</h2>
+    <a href="http://127.0.0.1:5000/add">新增数据</a>
     <ul class="listBox">
         <li>暂无内容</li>
     </ul>
@@ -34,7 +35,8 @@
                 if (data && data.length) {
                     let li = '';
                     data.forEach(item => {
-                        li += '<a href="/detail/'+ item.id +'"><li class="newsLi" data-id=' + item.id + '>' + item.title + '</li></a>'
+                        li += '<li class="newsLi" data-id=' + item.id + '><a href="/detail/' + item.id + '">' + item.title + '</a> ' +
+                            '&nbsp;&nbsp;&nbsp;<span class="delBtn" data-id=' + item.id + '>删除</span></li>'
                     })
                     $('.listBox').html(li)
                 }
@@ -47,7 +49,7 @@
                         url: '/query',
                         type: 'POST',
                         data: {},
-                        timeout:3000,
+                        timeout: 30000,
                         success: function (res) {
                             console.log(res)
                             if (res.status) {
@@ -69,8 +71,8 @@
                         $.ajax({
                             url: '/detail.do',
                             type: 'POST',
-                            data: JSON.stringify({id:id}),
-                            timeout:3000,
+                            data: JSON.stringify({id: id}),
+                            timeout: 30000,
                             success: function (res) {
                                 console.log(res)
                                 if (res.status) {
@@ -85,14 +87,36 @@
                 })
             }
 
-            $('body').delegate('.newsLi', 'click', function () {
-                let id = $(this).attr('data-id')
-                {#queryDetail(id)#}
+            // 删除
+            $('body').delegate('.delBtn', 'click', function () {
+                let id = $(this).attr('data-id');
+                console.log(id)
+                $.ajax({
+                    url: '/delete.do',
+                    type: 'POST',
+                    data: JSON.stringify({id: id}),
+                    timeout: 30000,
+                    success: function (res) {
+                        console.log(res)
+                        if (res.status) {
+                            refresh();
+                        }
+                    },
+                    error: function (res) {
+                        console.log(res)
+                    }
+                })
             })
 
-            queryList().then(value => {
-                renderList(value)
-            })
+            // 刷新列表
+            function refresh() {
+                queryList().then(value => {
+                    renderList(value)
+                })
+            }
+
+            refresh()
+
         }
     </script>
 {% endblock %}
