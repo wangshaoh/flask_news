@@ -62,6 +62,10 @@ def detail(id=''):
     else:
         return render_template('404.html')
 
+@app.route('/add')
+def add():
+    return render_template('add.html')
+
 # 文件下载页面
 @app.route('/download')
 def download():
@@ -94,9 +98,7 @@ def query():
     pass
 
 
-@app.route('/add')
-def add():
-    return render_template('add.html')
+
 
 
 # 添加数据
