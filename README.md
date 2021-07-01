@@ -1,5 +1,7 @@
 # flask_news
 
+_一个极简示例，flask+flask_sqlalchemy 实现数据增删改查，分页，附件上传下载_
+
 _准备工作：安装python3和mysql，并连接mysql，建表__
 
 _1、安装flask和flask_sqlalchemy：_
